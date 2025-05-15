@@ -23,18 +23,19 @@ const AniFirePlayer = ({
 }: AniFirePlayerProps) => {
   const playM3u8 = useCallback((video: any, url: string, art: Artplayer) => {
     if (Hls.isSupported()) {
-      if (art.hls) art.hls.destror();
+      if (art.hls) art.hls.destroy();
       const hls = new Hls();
       hls.loadSource(url);
       hls.attachMedia(video);
       art.hls = hls;
       art.on("destroy", () => hls.destroy());
-    } else if (video.onCanPlayType("application/vnd.apple.mpegurl")) {
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = url;
     } else {
-      art.notice.show = "Unsuported playback format :(";
+      art.notice.show = "Unsupported playback format :(";
     }
   }, []);
+
   const episodeSourceUrl = useMemo(() => {
     if (props.sources.length > 0) {
       return props.sources[0].url;
@@ -100,18 +101,7 @@ const AniFirePlayer = ({
       className="art-container aspect-video w-full shrink-0"
     />
   );
-
-  return (
-    <Player
-      url={episodeSourceUrl}
-      option={options}
-      subtitles={props.tracks}
-      intro={props.intro}
-      outro={props.outro}
-      episodes={episodes}
-      episodeId={episodeId}
-      className="art-container aspect-video w-full shrink-0"
-    />
-  );
 };
+
 export default memo(AniFirePlayer);
+
